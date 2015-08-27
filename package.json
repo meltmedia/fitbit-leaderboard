@@ -1,0 +1,51 @@
+{
+  "name": "fitbit-leaderboard",
+  "version": "1.0.0",
+  "description": "A leaderboard for meltmedia's Fitbit challenge",
+  "main": "app.js",
+  "scripts": {
+    "postinstall": "./node_modules/.bin/bower install",
+    "start": "./node_modules/.bin/grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meltmedia/fitbit-leaderboard.git"
+  },
+  "author": "Jimmy King <jimmy.king@meltmedia.com> (http://jimmyking.me)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/meltmedia/fitbit-leaderboard/issues"
+  },
+  "homepage": "https://github.com/meltmedia/fitbit-leaderboard",
+  "dependencies": {
+    "basic-auth": "^1.0.3",
+    "bower": "^1.3.12",
+    "cookie-parser": "^1.3.3",
+    "debug": "^2.0.0",
+    "ejs": "^1.0.0",
+    "express": "^4.9.4",
+    "express-session": "^1.8.2",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-concurrent": "^1.0.0",
+    "grunt-contrib-copy": "^0.6.0",
+    "grunt-contrib-htmlmin": "^0.3.0",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-exec": "^0.4.6",
+    "grunt-ng-constant": "^1.0.0",
+    "grunt-nodemon": "^0.3.0",
+    "grunt-sass": "^0.14.2",
+    "krypt": "^0.3.0",
+    "moment": "^2.8.3",
+    "mongoose": "^3.8.x",
+    "open": "0.0.5",
+    "passport": "^0.2.1",
+    "passport-fitbit": "^0.1.2",
+    "promise": "^6.0.0",
+    "request": "^2.44.0",
+    "uuid-v4": "^0.1.0",
+    "winston": "^1.0.1",
+    "winston-loggly": "^1.1.0"
+  }
+}

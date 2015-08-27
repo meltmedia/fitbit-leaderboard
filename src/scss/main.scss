@@ -1,0 +1,723 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,700,300|Roboto+Slab:400,700,300);
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/normalize';
+@import 'variables';
+@import 'mixins';
+
+//-------------------------------
+// Global
+//-------------------------------
+
+html * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  color: $gray;
+  font-family: $roboto;
+  @media (min-width: 600px) {
+    min-width: 98%;
+  }
+  @media (min-width: 1039px) {
+    min-width: 1024px;
+  }
+  @media (min-width: 1243px) {
+    min-width: $siteWidth;
+  }
+}
+
+header, section, footer {
+  width: 100%;
+}
+
+.wrapper {
+  margin: 0 auto;
+  @media (min-width: 600px) {
+    width: 98%;
+  }
+  @media (min-width: 1243px) {
+    width: $siteWidth;
+  }
+}
+
+.button {
+  @include borderRadius(30px);
+  background: $green;
+  color: white;
+  font-size: 19px;
+  padding: 20px 30px;
+  text: {
+    decoration: none;
+    transform: uppercase;
+  }
+  &.alert {
+    background: $red;
+  }
+  @media (min-width: 768px) {
+    margin: 25px 30px 10px 0;
+    float: left;
+  }
+}
+
+.signup {
+  @media (max-width: 767px) {
+    text-align: center;
+    margin: 35px auto;
+  }
+  @media (min-width: 768px) {
+    text-align: left;
+    margin: 0;
+  }
+}
+
+//-------------------------------
+// Header
+//-------------------------------
+
+header {
+  background: url('/images/topo_map.png');
+  color: white;
+  font-family: $robotoSlab;
+  @media (max-width: 408px) {
+    height: 780px !important;
+  }
+  @media (max-width: 599px) {
+    height: 700px;
+  }
+  @media (min-width: 600px) {
+    height: 660px;
+  }
+  @media (min-width: 768px) {
+    height: 430px;
+  }
+  @media (min-width: 1039px) {
+    height: 400px;
+  }
+
+  p {
+    float: left;
+    line-height: 1.75em;
+    font: {
+      family: $roboto;
+      size: 14px;
+      weight: 100;
+    }
+    @media (min-width: 600px) {
+      width: 98%;
+    }
+    @media (min-width: 768px) {
+      width: 90%;
+      font-size: 15px;
+    }
+    @media (min-width: 1039px) {
+      width: 65%;
+      font-size: 17px;
+    }
+    @media (min-width: 1243px) {
+      width: 67%;
+    }
+  }
+
+  .wrapper {
+    padding: $gutter;
+  }
+
+  .inner-wrap {
+    float: left;
+    width: 100%;
+    @media (min-width: 600px) {
+      width: 98%;
+    }
+    @media (min-width: 768px) {
+      width: 56.5%;
+      margin-right: 1.5%;
+    }
+    @media (min-width: 1039px) {
+      width: 70%;
+      margin-right: 0%;
+    }
+    @media (min-width: 1243px) {
+      width: 75%;
+    }
+  }
+}
+
+.Spring {
+  color: #8DC63F;
+}
+
+.Summer {
+  color: #FCB03F;
+}
+
+.Fall {
+  color: #F26822;
+}
+
+.Winter {
+  color: #73BAE8;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 28px;
+  @media (max-width: 767px) {
+    display: none;
+  }
+  @media (min-width: 1039px) {
+    font-size: 47px;
+  }
+}
+
+h2 {
+  font: {
+    weight: 100;
+    size: 19px;
+  }
+  margin: {
+    bottom: 0;
+    top: 10px;
+  }
+  @media (max-width: 767px) {
+    text-align: center;
+  }
+  @media (min-width: 1039px) {
+    font: {
+      size: 29px;
+    }
+  }
+}
+
+#badge1 {
+  @media (max-width: 767px) {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+#badge2 {
+  img {
+    max-width: 279px;
+  }
+
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+//-------------------------------
+// Stats board
+//-------------------------------
+
+.stats-board {
+  @include clearFix;
+  margin: $gutter 0;
+}
+
+.stats-widget {
+  border-left: 1px solid $gray;
+  float: left;
+  font-size: 14px;
+  text-transform: uppercase;
+  padding: 10px $gutter;
+  min-height: 0px;
+  width: 100%;
+  @media (max-width: 408px) {
+    font-size: 12px;
+  }
+  @media (max-width: 599px) {
+    padding-left: 18% !important;
+  }
+  @media (max-width: 767px) {
+    width: 100%;
+    border-top: 1px solid $gray;
+    border-left: none;
+    margin: 0 auto;
+    padding-left: 31%;
+    padding-right: 0px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  @media (min-width: 768px) {
+    min-height: 140px;
+    width: 25%;
+  }
+  @media (min-width: 1039px) {
+    padding: ($gutter / 2) $gutter;
+    min-height: 91px;
+  }
+  @media (min-width: 1243px) {
+    min-height: initial;
+  }
+
+  &:first-child {
+    border: 0;
+  }
+}
+
+.stats-icon {
+  background-repeat: no-repeat;
+  float: left;
+  margin: 0 auto;
+  background-position: center;
+
+  .participants & {
+    background-image: url('/images/users.svg');
+    height: 52px;
+    width: 52px;
+  }
+
+  .days & {
+    background-image: url('/images/calendar.svg');
+    height: 52px;
+    width: 52px;
+    margin-left: -8px;
+    @media (max-width: 767px) {
+      margin-left: 0px;
+    }
+  }
+
+  .steps & {
+    background-image: url('/images/heart.svg');
+    height: 52px;
+    width: 52px;
+    margin-left: -4px;
+    @media (max-width: 767px) {
+      margin-left: 0px;
+    }
+  }
+
+  .miles & {
+    background-image: url('/images/road.svg');
+    height: 52px;
+    width: 52px;
+  }
+}
+
+.stats-text {
+  float: left;
+  margin-left: -3px;
+  width: auto;
+  @media (max-width: 767px) {
+    margin: 0 auto;
+    padding-left: 50px;
+  }
+  @media (min-width: 768px) {
+    width: 168px;
+  }
+  @media (min-width: 1039px) {
+    margin: 0 0 0 ($gutter / 2);
+    max-width: 100px;
+  }
+  @media (min-width: 1243px) {
+    max-width: none;
+    width: auto;
+  }
+}
+
+.stats-value {
+  display: block;
+  font: {
+    size: 29px;
+    weight: 200;
+  }
+  line-height: .85;
+  margin-bottom: 5px;
+  text-align: left;
+  @media (max-width: 408px) {
+    font: {
+      size: 24px;
+    }
+  }
+  @media (min-width: 1243px) {
+    font: {
+      size: 36px;
+    }
+  }
+}
+
+//-------------------------------
+// Leaderboard
+//-------------------------------
+
+.banner {
+  background: $blue;
+  color: white;
+  margin: $gutter 0;
+  padding: 20px 0;
+  position: relative;
+  font: {
+    family: $robotoSlab;
+    size: 32px;
+  }
+  text: {
+    align: center;
+    transform: uppercase;
+  }
+  @media (max-width: 408px) {
+    font: {
+      size: 30px;
+    }
+  }
+
+  &:before,
+  &:after {
+    border: 39px solid transparent;
+    content: '';
+    display: block;
+    height: 0;
+    position: absolute;
+    top: 0;
+    width: 0;
+  }
+
+  &:before {
+    border-left-color: white;
+    left: 0;
+  }
+
+  &:after {
+    border-right-color: white;
+    right: 0;
+  }
+}
+
+.banner-lines {
+  &:before,
+  &:after {
+    background: white;
+    content: '';
+    display: block;
+    height: 2px;
+    position: absolute;
+    top: 38px;
+    width: 0px;
+    @media (min-width: 600px) {
+      width: 18%;
+    }
+    @media (min-width: 768px) {
+      width: 25%;
+    }
+    @media (min-width: 1039px) {
+      width: 31%;
+    }
+    @media (min-width: 1243px) {
+      width: 408px;
+    }
+  }
+
+  &:before {
+    left: 60px;
+  }
+
+  &:after {
+    right: 60px;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+thead {
+  border-bottom: 2px solid $lightGray;
+  text-transform: uppercase;
+  font: {
+    family: $robotoSlab;
+    size: 12px;
+  }
+  @media (max-width: 468px) {
+    text-transform: capitalize;
+  }
+  @media (min-width: 1039px) {
+    font: {
+      size: 16px;
+    }
+  }
+}
+
+th {
+  font-weight: normal;
+  text-align: left;
+}
+
+td, th {
+  &:first-child {
+    padding-left: 10px;
+    max-width: 70px;
+    @media (min-width: 600px) {
+      text-align: center;
+    }
+    @media (max-width: 767px) {
+      padding-right: 10px;
+    }
+    @media (min-width: 768px) {
+      padding-left: $gutter;
+    }
+    @media (min-width: 1039px) {
+      max-width: none;
+    }
+  }
+  &:nth-child(2) {
+    @media (max-width: 599px) {
+      display: none;
+    }
+  }
+  &:nth-child(3) {
+    @media (max-width: 408px) {
+      max-width: 60px;
+      padding-right: 10px;
+    }
+    @media (max-width: 767px) {
+      max-width: 120px;
+    }
+    @media (min-width: 1039px) {
+      max-width: none;
+    }
+  }
+  &:nth-child(4) {
+    padding-right: 20px;
+    @media (max-width: 767px) {
+      max-width: 100px;
+    }
+    @media (min-width: 768px) {
+      min-width: 110px;
+    }
+    @media (min-width: 1039px) {
+      max-width: none;
+      min-width: 170px;
+    }
+  }
+  &:nth-child(5) {
+    padding-right: 20px;
+    @media (max-width: 767px) {
+      max-width: 80px;
+    }
+    @media (min-width: 768px) {
+      max-width: 110px;
+    }
+    @media (min-width: 1039px) {
+      max-width: none;
+      padding-right: 40px;
+    }
+  }
+  &:last-child {
+    padding-right: 10px;
+    max-width: 100px;
+    @media (max-width: 408px) {
+      padding-right: 5px;
+    }
+    @media (min-width: 768px) {
+      padding-right: $gutter;
+      max-width: 110px;
+    }
+    @media (min-width: 1039px) {
+      max-width: 190px;
+    }
+  }
+}
+
+tbody {
+  font: {
+    size: 14px;
+    weight: 200;
+  }
+  @media (min-width: 768px) {
+    font: {
+      size: 16px;
+    }
+  }
+  @media (min-width: 1039px) {
+    font: {
+      size: 20px;
+    }
+  }
+
+  .position-1 {
+    font-size: 14px;
+    @media (min-width: 768px) {
+      font-size: 20px;
+    }
+    @media (min-width: 1039px) {
+      font-size: 28px;
+    }
+  }
+
+  tr {
+    height: 50px;
+
+    &:nth-child(even) {
+      background: $lightGray;
+    }
+  }
+}
+
+.position-1 {
+  height: 110px;
+
+  .text-name {
+    position: relative;
+    @media (max-width: 767px) {
+      font-weight: bold;
+    }
+
+    &:before {
+      content: 'CURRENT LEADER';
+      position: absolute;
+      top: -24px;
+      width: 150px;
+      font-size: 12px;
+      @media (max-width: 767px) {
+        display: none;
+      }
+      @media (min-width: 1039px) {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .text-rank {
+    background: transparent;
+    display: inline-block;
+    @media (min-width: 600px) {
+      @include hideText;
+      background: url('/images/trophy.svg') no-repeat;
+      height: 50px;
+      width: 50px;
+    }
+  }
+
+}
+
+.cell-rank {
+  text-align: center;
+}
+
+.cell-avatar {
+  img {
+    @include borderRadius(50%);
+    display: block;
+    height: 40px;
+    margin: 0 auto;
+    vertical-align: middle;
+    width: 40px;
+
+    .position-1 & {
+      height: 75px;
+      width: 75px;
+    }
+  }
+}
+
+.cell-name {
+  padding-right: 20px;
+  font: {
+    family: $robotoSlab;
+    size: 14px;
+  }
+  @media (min-width: 768px) {
+    font: {
+      size: 16px;
+    }
+  }
+  @media (min-width: 1039px) {
+    font: {
+      size: 25px;
+    }
+  }
+
+  .position-1 & {
+    font-size: 14px;
+    @media (min-width: 768px) {
+      font-size: 20px;
+    }
+    @media (min-width: 1039px) {
+      font-size: 32px;
+    }
+  }
+}
+
+.text-name {
+  .button {
+    font-size: 9px;
+    padding: 8px 14px 7px;
+    vertical-align: middle;
+  }
+}
+
+//-------------------------------
+// Footer
+//-------------------------------
+
+footer {
+  background: $blue;
+  color: white;
+  margin-top: $gutter;
+
+  .wrapper {
+    @include clearFix;
+    padding: $gutter;
+  }
+}
+
+blockquote {
+  float: left;
+  margin: 0;
+  width: 70%;
+  @media (min-width: 600px) {
+    width: 80%;
+  }
+
+  p {
+    margin: 0;
+    font: {
+      family: $robotoSlab;
+      size: 20px;
+      weight: 100;
+    }
+    @media (min-width: 600px) {
+      font: {
+        size: 28px;
+      }
+    }
+
+    &:before {
+      content: '\201C';
+    }
+
+    &:after {
+      content: '\201D';
+    }
+  }
+
+  cite {
+    color: #497291;
+    font: {
+      style: normal;
+      size: 16px;
+      weight: 200;
+    }
+    @media (min-width: 600px) {
+      font: {
+        size: 18px;
+      }
+    }
+
+    &:before {
+      content: '\2013\00A0';
+    }
+  }
+}
+
+.meltmedia-logo {
+  @include hideText;
+  background: url('/images/logo.svg') no-repeat;
+  display: inline-block;
+  float: right;
+  height: 56px;
+  width: 56px;
+}

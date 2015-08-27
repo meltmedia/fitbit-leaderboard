@@ -1,0 +1,24 @@
+{
+  "name": "fitbit-leaderboard",
+  "version": "1.0.0",
+  "homepage": "https://github.com/meltmedia/fitbit-leaderboard",
+  "authors": [
+    "Jimmy King <jimmy.king@meltmedia.com>"
+  ],
+  "description": "A leaderboard for the meltmedia Fitbit challenge",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.3",
+    "momentjs": "~2.10.6",
+    "lodash": "~3.10.1",
+    "bootstrap-sass": "~3.3.5",
+    "angular-route": "~1.4.4"
+  }
+}

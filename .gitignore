@@ -1,0 +1,11 @@
+.DS_Store
+.rebooted
+config.json
+src/js/constants.js
+totem.yml
+
+bower_components
+node_modules
+public
+
+*.swp
