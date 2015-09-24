@@ -2,7 +2,7 @@
 
 Where the steps come to roam...
 
-At meltmedia, we organize recurring Fitbit competitions that run for a month at a time. People really get into it and there are some great prizes at the end. At some point, we decided to hook into the Fitbit API and make our own custom "Fitbit Leaderboard" webSite for our team. Now we've opened it up to the world!
+At meltmedia, we organize recurring Fitbit competitions that run for a month at a time. People really get into it and there are some great prizes at the end. At some point, we decided to hook into the Fitbit API and make our own custom "Fitbit Leaderboard" website for our team. Now we've opened it up to the world!
 
 Feel free to personalize it for your team, and let people know where you found it :)
 
