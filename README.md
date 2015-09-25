@@ -1,16 +1,12 @@
 # Fitbit Leaderboard
 
-Where the steps come to roam...
-
-At meltmedia, we organize recurring Fitbit competitions that run for a month at a time. People really get into it and there are some great prizes at the end. At some point, we decided to hook into the Fitbit API and make our own custom "Fitbit Leaderboard" website for our team. Now we've opened it up to the world! And we used responsive design, so it works great on all screens!
+At meltmedia, we organize recurring Fitbit competitions that run for up to a month at a time. People really get into it and there are some great prizes at the end. At some point, we decided to hook into the Fitbit API and make our own custom "Fitbit Leaderboard" website for our team. Now we've opened it up to the world! And we used responsive design, so it works great on all screens!
 
 Feel free to personalize it for your team, and let people know where you found it :)
 
-You can see a preview of one of our past leaderboards here:<br>
-http://blog.meltmedia.com/wp-content/uploads/2014/10/fitbitChallenge_screen.jpg
+![screenshot](http://blog.meltmedia.com/wp-content/uploads/2014/10/fitbitChallenge_screen.jpg)
 
-And read about our Fitbit shenanigans here:<br>
-http://blog.meltmedia.com/2014/10/the-fall-fitbit-challenge-is-upon-us/
+Read about our Fitbit shenanigans [on our blog](http://blog.meltmedia.com/2014/10/the-fall-fitbit-challenge-is-upon-us/).
 
 **Step on wif yo bad self!**
 
@@ -27,8 +23,6 @@ grunt dev
 ```
 
 ## Install Project Packages
-#### nvm
-https://github.com/creationix/nvm
 
 #### MongoDB
 Click the link and follow the instructions to install Mongo.<br>
