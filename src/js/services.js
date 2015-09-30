@@ -7,7 +7,7 @@ angular.module('FitbitLeaderboard.services', [])
     var deferred = $q.defer();
 
     if (!cache) {
-      $http.get('/quotes.json')
+      $http.get('/leaderboard/quotes.json')
       .success(function (data) {
         cache = data;
         deferred.resolve(data);
@@ -27,7 +27,7 @@ angular.module('FitbitLeaderboard.services', [])
   this.get = function () {
     var deferred = $q.defer();
 
-    $http.get('/api/users')
+    $http.get('/api/public/users')
     .success(function (data) {
       deferred.resolve(data);
     })

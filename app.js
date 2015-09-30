@@ -17,9 +17,9 @@ var express = require('express'),
     env = app.get('env');
 
 // Config
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/leaderboard', express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
-app.use('/api/users', users);
+app.use('/api/public/users', users);
 app.use(cookieParser());
 app.use(session({
   secret: uuid(),
@@ -76,7 +76,7 @@ var auth = function (req, res, next) {
 app.get('/auth/fitbit', auth, passport.authenticate('fitbit'));
 
 app.get('/auth/fitbit/callback', passport.authenticate('fitbit', {failureRedirect: '/'}), function (req, res) {
-  res.redirect('/');
+  res.redirect('/leaderboard');
 });
 
 // Update all users' steps and distance
@@ -95,6 +95,10 @@ updateData();
 
 // Update at configured interval
 setInterval(updateData, config.updateInterval);
+
+app.use('/', function(req, res) {
+  res.redirect('/leaderboard');
+});
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {

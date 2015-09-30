@@ -76,7 +76,7 @@ header, section, footer {
 //-------------------------------
 
 header {
-  background: url('/images/topo_map.png');
+  background: url('/leaderboard/images/topo_map.png');
   color: white;
   font-family: $robotoSlab;
   @media (max-width: 408px) {
@@ -266,13 +266,13 @@ h2 {
   background-position: center;
 
   .participants & {
-    background-image: url('/images/users.svg');
+    background-image: url('/leaderboard/images/users.svg');
     height: 52px;
     width: 52px;
   }
 
   .days & {
-    background-image: url('/images/calendar.svg');
+    background-image: url('/leaderboard/images/calendar.svg');
     height: 52px;
     width: 52px;
     margin-left: -8px;
@@ -282,7 +282,7 @@ h2 {
   }
 
   .steps & {
-    background-image: url('/images/heart.svg');
+    background-image: url('/leaderboard/images/heart.svg');
     height: 52px;
     width: 52px;
     margin-left: -4px;
@@ -292,7 +292,7 @@ h2 {
   }
 
   .miles & {
-    background-image: url('/images/road.svg');
+    background-image: url('/leaderboard/images/road.svg');
     height: 52px;
     width: 52px;
   }
@@ -585,7 +585,7 @@ tbody {
     display: inline-block;
     @media (min-width: 600px) {
       @include hideText;
-      background: url('/images/trophy.svg') no-repeat;
+      background: url('/leaderboard/images/trophy.svg') no-repeat;
       height: 50px;
       width: 50px;
     }
@@ -715,7 +715,7 @@ blockquote {
 
 .meltmedia-logo {
   @include hideText;
-  background: url('/images/logo.svg') no-repeat;
+  background: url('/leaderboard/images/logo.svg') no-repeat;
   display: inline-block;
   float: right;
   height: 56px;

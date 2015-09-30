@@ -3,15 +3,15 @@
 <head>
   <title>Fitbit Leaderboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="/images/favicon-96x96.png" type="image/png">
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/leaderboard/images/favicon-96x96.png" type="image/png">
+  <link rel="stylesheet" href="/leaderboard/styles.css" />
 </head>
 <body ng-controller="MainCtrl">
 
   <header ng-cloak ng-controller="RegisterCtrl">
     <div class="wrapper">
       <div class="inner-wrap">
-        <div id="badge1"><img ng-src="/images/badge-{{season}}.png" /></div>
+        <div id="badge1"><img ng-src="/leaderboard/images/badge-{{season}}.png" /></div>
 
         <h1>The <span class="{{season}}">{{season}}</span> Fitbit Challenge</h1>
 
@@ -22,7 +22,7 @@
         <p>meltmedia is challenging you to step your butt off, on any day between 12:00&nbsp;am on {{startDay}} {{startDate}} and it will go till {{endDay}} 11:59:59&nbsp;pm {{endDate}}. Whether you're running, hiking, biking or walking, lace up those shoes and show us what you're made of. </p>
       </div>
 
-      <div id="badge2"><img ng-src="/images/badge-{{season}}.png" /></div>
+      <div id="badge2"><img ng-src="/leaderboard/images/badge-{{season}}.png" /></div>
     </div>
   </header>
 
@@ -67,7 +67,7 @@
             <tr ng-repeat="user in users | orderBy: '-steps'" class="position-{{$index + 1}}">
               <td class="cell-rank"><span class="text-rank">{{$index + 1}}</span></td>
               <td class="cell-avatar"><img ng-src="{{user.avatar}}"/></td>
-              <td class="cell-name"><span class="text-name">{{user.fullName}} <a href="/auth/fitbit" ng-hide="user.authorized" class="button alert">Re-authorize</a></span></td>
+              <td class="cell-name"><span class="text-name">{{user.fullName}} <a href="/leaderboard/auth/fitbit" ng-hide="user.authorized" class="button alert">Re-authorize</a></span></td>
               <td class="cell-steps">{{user.steps | number}}</td>
               <td class="cell-miles">{{user.distance | number:2}}</td>
               <td class="cell-average">{{user.averageSteps | number:0}}</td>
@@ -89,6 +89,6 @@
     </div>
   </footer>
 
-  <script src="/scripts.js"></script>
+  <script src="/leaderboard/scripts.js"></script>
 </body>
 </html>
