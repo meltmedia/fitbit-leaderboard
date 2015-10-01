@@ -1,4 +1,4 @@
-# Fitbit Leaderboard
+# [Fitbit Leaderboard](http://fitbit.meltmedia.com/leaderboard/)
 
 At meltmedia, we organize recurring Fitbit competitions that run for up to a month at a time. People really get into it and there are some great prizes at the end. At some point, we decided to hook into the Fitbit API and make our own custom "Fitbit Leaderboard" website for our team. Now we've opened it up to the world! And we used responsive design, so it works great on all screens!
 
@@ -84,3 +84,7 @@ The Loggly environment variables are not required for your app to run. If using 
 - Run in not production mode: `grunt not-prod`
 - Run in production mode: `grunt prod`
 - `grunt` is an alias of `grunt dev`
+
+## Notes
+
+If using ACLs to restrict registration instead of the shared basic auth user, make sure that `/leaderboard` and `/api/public` are public and `/auth` is private.
