@@ -47,19 +47,11 @@ module.exports = {
 
   updateSteps: function (user) {
     var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
-
-    var oauth = {
-      consumer_key: config.fitbit.key,
-      consumer_secret: config.fitbit.secret,
-      token: credentials.token,
-      token_secret: credentials.tokenSecret
-    };
-
     var url = 'https://api.fitbit.com/1/user/-/activities/tracker/steps/date/' + config.startDate + '/' + config.endDate + '.json';
 
     request.get({
       url: url,
-      oauth: oauth,
+      auth: {bearer: credentials.accessToken},
       json: true
     }, function (err, resp, json) {
       if (err) {
@@ -107,14 +99,6 @@ module.exports = {
 
   updateDistance: function (user) {
     var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
-
-    var oauth = {
-      consumer_key: config.fitbit.key,
-      consumer_secret: config.fitbit.secret,
-      token: credentials.token,
-      token_secret: credentials.tokenSecret
-    };
-
     var url = 'https://api.fitbit.com/1/user/-/activities/tracker/distance/date/' + config.startDate + '/' + config.endDate + '.json';
 
     request.get({
@@ -122,7 +106,7 @@ module.exports = {
       headers: {
         'Accept-Language': 'en_US'
       },
-      oauth: oauth,
+      auth: {bearer: credentials.accessToken},
       json: true
     }, function (err, resp, json) {
       if (err) {
