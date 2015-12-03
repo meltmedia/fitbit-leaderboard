@@ -1,5 +1,6 @@
 var request = require('request'),
     krypt = require('krypt'),
+    refresh = require('passport-oauth2-refresh'),
     logger = require('./logger'),
     db = require('./mongo'),
     config = require('./config');
@@ -14,7 +15,8 @@ module.exports = {
       authorized: true,
       avatar: userProfile.avatar,
       encodedId: userProfile.encodedId,
-      fullName: userProfile.fullName
+      fullName: userProfile.fullName,
+      refreshAttempted: false
     };
 
     db.find(userObj.encodedId).then(function (user) {
@@ -34,6 +36,28 @@ module.exports = {
     });
   },
 
+  refresh: function (user) {
+    var self = this;
+    var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
+
+    refresh.requestNewAccessToken('fitbit', credentials.refreshToken, function (err, accessToken, refreshToken) {
+      if (err) {
+        db.update({
+          encodedId: user.encodedId,
+          refreshAttempted: true
+        });
+      } else {
+        var secret = {
+          accessToken: accessToken,
+          refreshToken: refreshToken
+        };
+
+        var newCredentials = krypt.encrypt(JSON.stringify(secret), config.secret);
+        self.addUser(newCredentials, user);
+      }
+    });
+  },
+
   updateAll: function (encodedId) {
     var self = this;
 
@@ -48,6 +72,7 @@ module.exports = {
   updateSteps: function (user) {
     var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
     var url = 'https://api.fitbit.com/1/user/-/activities/tracker/steps/date/' + config.startDate + '/' + config.endDate + '.json';
+    var self = this;
 
     request.get({
       url: url,
@@ -65,12 +90,16 @@ module.exports = {
       }
 
       if (json.errors) {
-        db.update({
-          encodedId: user.encodedId,
-          authorized: false
-        }).catch(function (err) {
-          logger.warn('error updating user', err);
-        });
+        if (!user.refreshAttempted) {
+          self.refresh(user);
+        } else {
+          db.update({
+            encodedId: user.encodedId,
+            authorized: false
+          }).catch(function (err) {
+            logger.warn('error updating user', err);
+          });
+        }
 
         return;
       }
@@ -100,6 +129,7 @@ module.exports = {
   updateDistance: function (user) {
     var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
     var url = 'https://api.fitbit.com/1/user/-/activities/tracker/distance/date/' + config.startDate + '/' + config.endDate + '.json';
+    var self = this;
 
     request.get({
       url: url,
@@ -120,12 +150,16 @@ module.exports = {
       }
 
       if (json.errors) {
-        db.update({
-          encodedId: user.encodedId,
-          authorized: false
-        }).catch(function (err) {
-          logger.warn('error updating user', err);
-        });
+        if (!user.refreshAttempted) {
+          self.refresh(user);
+        } else {
+          db.update({
+            encodedId: user.encodedId,
+            authorized: false
+          }).catch(function (err) {
+            logger.warn('error updating user', err);
+          });
+        }
 
         return;
       }
