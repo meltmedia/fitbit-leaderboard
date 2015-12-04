@@ -43,6 +43,7 @@ module.exports = {
     refresh.requestNewAccessToken('fitbit', credentials.refreshToken, function (err, accessToken, refreshToken) {
       if (err) {
         db.update({
+          authorized: false,
           encodedId: user.encodedId,
           refreshAttempted: true
         });
@@ -53,7 +54,7 @@ module.exports = {
         };
 
         var newCredentials = krypt.encrypt(JSON.stringify(secret), config.secret);
-        self.addUser(newCredentials, user);
+        self.addUser(newCredentials, {_json: {user: user}});
       }
     });
   },
