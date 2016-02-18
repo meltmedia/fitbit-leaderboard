@@ -43,8 +43,14 @@ angular.module('FitbitLeaderboard.controllers', ['FitbitLeaderboard.constants'])
   };
 
   ctrl.getAverageSteps = function (users) {
-    // Add one day to diff. Allows current day to be included in calculation
-    var days = moment().diff(moment(config.startDate), 'days') + 1;
+    console.log(ctrl.getDaysLeft())
+
+    var
+      daysLeft = ctrl.getDaysLeft(),
+      // When the competition is over, the current date should be the end date.
+      currentDate = daysLeft===0 ? moment(config.endDate + ' 23:59:59') : moment(),
+      // Add one day to diff. Allows current day to be included in calculation
+      days = currentDate.diff(moment(config.startDate), 'days') + 1;
 
     for (var i = 0; i < users.length; i ++) {
       users[i].averageSteps = users[i].steps / days;
