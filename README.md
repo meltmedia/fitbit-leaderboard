@@ -34,7 +34,7 @@ You will need the following environment variables:
 
 ### General
 
-- `FITBIT_APP_SECRET`: a secret passphrase for encryption
+- `FITBIT_CHALLENGE_SECRET`: a secret passphrase for encryption
 - `FITBIT_UPDATE_INTERVAL`: interval in milliseconds to update leaderboard (optional, defaults to 300000)
 - `FITBIT_APP_HOST`: the host for your app (not used in local dev)
 - `FITBIT_LEADERBOARD_START`: start date for challenge (format: YYYY-MM-DD)
@@ -57,8 +57,8 @@ The update interval, dates and host can also be configured in a `config.json` fi
 
 ### Fitbit API
 
-- `FITBIT_API_KEY`: Fitbit API key
-- `FITBIT_API_SECRET`: Fitbit API secret
+- `FITBIT_CLIENT_ID`: Fitbit OAuth 2.0 Client ID
+- `FITBIT_API_SECRET`: Fitbit API Client (Consumer) Secret
 
 ### Mongo
 

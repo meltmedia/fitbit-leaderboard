@@ -6,11 +6,12 @@ var mongoose = require('mongoose'),
 var userSchema = new Schema({
   authorized: Boolean,
   avatar: String,
+  credentials: String,
   distance: Number,
   encodedId: String,
   fullName: String,
-  steps: Number,
-  credentials: String
+  refreshAttempted: Boolean,
+  steps: Number
 });
 
 var User = mongoose.model('User', userSchema);
