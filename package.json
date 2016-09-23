@@ -43,6 +43,7 @@
     "open": "0.0.5",
     "passport": "^0.2.1",
     "passport-fitbit": "^0.1.2",
+    "passport-fitbit-oauth2": "^1.0.2",
     "promise": "^6.0.0",
     "request": "^2.44.0",
     "uuid-v4": "^0.1.0",
