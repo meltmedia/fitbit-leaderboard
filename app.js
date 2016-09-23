@@ -12,7 +12,7 @@ var express = require('express'),
     fitbit = require('./modules/fitbit'),
     path = require('path'),
     passport = require('passport'),
-    FitbitStrategy = require('passport-fitbit').Strategy,
+    FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy,
     app = express(),
     env = app.get('env');
 
@@ -41,16 +41,16 @@ passport.deserializeUser(function (obj, done) {
 
 // Set up Fitbit OAuth
 passport.use(new FitbitStrategy({
-    consumerKey: config.fitbit.key,
-    consumerSecret: config.fitbit.secret,
+    clientID: config.fitbit.clientID,
+    clientSecret: config.fitbit.clientSecret,
     callbackURL: 'http://' + config.host + '/auth/fitbit/callback'
   },
-  function (token, tokenSecret, profile, done) {
+  function (accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
       if (!moment().isAfter(config.endDate)) {
         var secret = {
-          token: token,
-          tokenSecret: tokenSecret
+          token: accessToken,
+          tokenSecret: refreshToken
         };
 
         var credentials = krypt.encrypt(JSON.stringify(secret), config.secret);
@@ -73,11 +73,14 @@ var auth = function (req, res, next) {
   }
 };
 
-app.get('/auth/fitbit', auth, passport.authenticate('fitbit'));
+app.get('/auth/fitbit', auth, passport.authenticate('fitbit', { scope: ['activity','heartrate','location','profile'] }));
 
-app.get('/auth/fitbit/callback', passport.authenticate('fitbit', {failureRedirect: '/'}), function (req, res) {
-  res.redirect('/leaderboard');
-});
+app.get('/auth/fitbit/callback', passport.authenticate(
+  'fitbit',
+  {failureRedirect: '/'}),
+  function(req, res) {
+    res.redirect('/leaderboard');
+  });
 
 // Update all users' steps and distance
 var updateData = function () {
