@@ -18,8 +18,8 @@ if (!configJSON.dates) {
 
 var config = {
   fitbit: {
-    key: process.env.FITBIT_API_KEY,
-    secret: process.env.FITBIT_API_SECRET
+    clientID: process.env.FITBIT_OAUTH_CLIENT_ID,
+    clientSecret: process.env.FITBIT_OAUTH_CLIENT_SECRET
   },
   mongo: {
     user: process.env.FITBIT_MONGO_USER || '',
