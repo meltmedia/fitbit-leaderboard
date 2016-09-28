@@ -1,15 +1,20 @@
 FROM totem/nodejs-base:0.10.29-trusty
 
-ADD . /opt/fitbit
+WORKDIR /opt/fitbit
 
 RUN npm install -g grunt-cli bower
-RUN cd /opt/fitbit && npm install && /usr/bin/bower --allow-root install
+
+ADD package.json npm-shrinkwrap.json /opt/fitbit/
+RUN rm -rf ./node_modules && npm install
+
+ADD bower.json /opt/fitbit
+RUN /usr/bin/bower --allow-root install
+
+ADD . /opt/fitbit
 
 EXPOSE 5455
 
 ENV DISCOVER fitbit-leaderboard:5455
-
-WORKDIR /opt/fitbit
 
 ENTRYPOINT ["/usr/bin/grunt"]
 CMD ["--help"]
