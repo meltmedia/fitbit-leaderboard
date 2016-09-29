@@ -67,7 +67,7 @@
             <tr ng-repeat="user in users | orderBy: '-steps'" class="position-{{$index + 1}}">
               <td class="cell-rank"><span class="text-rank">{{$index + 1}}</span></td>
               <td class="cell-avatar"><img ng-src="{{user.avatar}}"/></td>
-              <td class="cell-name"><span class="text-name">{{user.fullName}} <a href="/leaderboard/auth/fitbit" ng-hide="user.authorized" class="button alert">Re-authorize</a></span></td>
+              <td class="cell-name"><span class="text-name">{{user.fullName}} <a href="/auth/fitbit" ng-hide="user.authorized" class="button alert">Re-authorize</a></span></td>
               <td class="cell-steps">{{user.steps | number}}</td>
               <td class="cell-miles">{{user.distance | number:2}}</td>
               <td class="cell-average">{{user.averageSteps | number:0}}</td>
