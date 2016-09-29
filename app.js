@@ -50,11 +50,10 @@ passport.use(new FitbitStrategy({
       if (!moment().isAfter(config.endDate)) {
         var secret = {
           token: accessToken,
-          tokenSecret: refreshToken
+          refreshToken: refreshToken
         };
 
-        var credentials = krypt.encrypt(JSON.stringify(secret), config.secret);
-        fitbit.addUser(credentials, profile);
+        fitbit.addUser(secret, profile);
       }
 
       return done(null, profile);

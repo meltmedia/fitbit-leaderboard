@@ -2,15 +2,83 @@ var request = require('request'),
     krypt = require('krypt'),
     logger = require('./logger'),
     db = require('./mongo'),
-    config = require('./config');
+    config = require('./config'),
+    JWT = require('jwt-simple'),
+    _ = require('lodash');
+
+var ERR_NO_DATA = 'no data returned for steps from fitbit api';
+var ERR_INVALID_REQUEST = 'Unable to get activities for user';
+var ERR_BAD_REQUEST = 'error making request to fitbit api';
 
 module.exports = {
-  addUser: function (credentials, profile) {
+  deauthorize: function(user) {
+    db.update({
+      encodedId: user.encodedId,
+      authorized: false
+    }).catch(function (err) {
+      logger.warn('error updating user credentials', err);
+    });
+  },
+
+  getCredentials: function(user) {
+    var self = this;
+    var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
+
+    if (credentials.token !== undefined && credentials.token !== null) {
+      var decodedToken = JWT.decode(credentials.token, null, true);
+
+      // Check if the token is still good
+      if (Date.now() / 1000 < decodedToken.exp) {
+        return credentials;
+      }
+    }
+
+    if (!credentials.refreshToken && !credentials.tokenSecret) {
+      self.deauthorize(user);
+      throw new Error('User is missing refresh tokens');
+    }
+
+    // Get a new token if expired
+    request.post({
+      url: 'https://api.fitbit.com/oauth2/token',
+      headers: {
+        Authorization: 'Basic ' + new Buffer(config.fitbit.clientID + ':' + config.fitbit.clientSecret).toString('base64')
+      },
+      form: {
+        'grant_type': 'refresh_token',
+        'refresh_token': credentials.refreshToken || credentials.tokenSecret,
+      }
+    }, function(err, response, payload) {
+      if (err) {
+        logger.warn('error getting new access token', err);
+        return;
+      }
+
+      credentials = {
+        token: payload.access_token,
+        refreshToken: payload.refresh_token
+      };
+
+      db.update({
+        encodedId: user.encodedId,
+        authorized: true,
+        credentials: JSON.stringify(krypt.encrypt(JSON.stringify(credentials), config.secret))
+      }).catch(function (err) {
+        logger.warn('error updating user credentials', err);
+      });
+
+      return credentials;
+    });
+  },
+
+  addUser: function(secret, profile) {
     var self = this;
     var userProfile = profile._json.user;
 
+    var encodedCredentials = JSON.stringify(krypt.encrypt(JSON.stringify(secret), config.secret));
+
     var userObj = {
-      credentials: JSON.stringify(credentials),
+      credentials: JSON.stringify(encodedCredentials),
       authorized: true,
       avatar: userProfile.avatar,
       encodedId: userProfile.encodedId,
@@ -45,55 +113,53 @@ module.exports = {
     });
   },
 
-  updateSteps: function (user) {
-    var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
+  getData: function (path, user, callback) {
+    var credentials = this.getCredentials(user);
 
-    var oauth = {
-      consumer_key: config.fitbit.key,
-      consumer_secret: config.fitbit.secret,
-      token: credentials.token,
-      token_secret: credentials.tokenSecret
-    };
-
-    var url = 'https://api.fitbit.com/1/user/-/activities/tracker/steps/date/' + config.startDate + '/' + config.endDate + '.json';
-
+    // See Activity Time Series for details https://dev.fitbit.com/docs/activity/#activity-time-series
+    // GET /1/user/[user-id]/[resource-path]/date/[base-date]/[end-date].json
     request.get({
-      url: url,
-      oauth: oauth,
+      url: 'https://api.fitbit.com/1/user/-/' + path + '/date/' +
+            config.startDate + '/' + config.endDate + '.json',
+      headers: {
+        Authorization: 'Bearer ' + credentials.token
+      },
       json: true
-    }, function (err, resp, json) {
+    }, function(err, response, data) {
       if (err) {
-        logger.warn('error getting steps from fitbit api', err);
-        return;
+        logger.warn(ERR_BAD_REQUEST, err);
+        return callback({status: response.statusCode, message: ERR_BAD_REQUEST}, null);
       }
 
-      if (typeof json !== 'object') {
-        logger.info('no data returned for steps from fitbit api');
-        return;
+      if (response.statusCode !== 200) {
+        logger.warn(ERR_INVALID_REQUEST, response.body);
+        return callback({status: response.statusCode, message: ERR_INVALID_REQUEST}, null);
       }
 
-      if (json.errors) {
-        db.update({
-          encodedId: user.encodedId,
-          authorized: false
-        }).catch(function (err) {
-          logger.warn('error updating user', err);
-        });
-
-        return;
+      if (typeof data !== 'object') {
+        logger.warn(ERR_NO_DATA);
+        return callback({status: response.statusCode, message: ERR_NO_DATA}, null);
       }
 
-      var data = json['activities-tracker-steps'],
-          steps = 0;
+      return callback(null, data);
+    });
+  },
 
-      if (!data) {
-        logger.info('no steps returned in data from fitbit api');
-        return;
+  updateSteps: function(user) {
+    var self = this;
+
+    self.getData('activities/steps', user, function(err, data) {
+      if (err) {
+        throw new Error(err.message || err);
       }
 
-      for (var i = 0; i < data.length; i ++) {
-        steps += parseInt(data[i].value);
-      }
+      var steps = _
+        .chain(data['activities-steps'])
+        .map(function(item) {
+          return parseInt(item.value);
+        })
+        .sum()
+        .value();
 
       db.update({
         encodedId: user.encodedId,
@@ -106,57 +172,20 @@ module.exports = {
   },
 
   updateDistance: function (user) {
-    var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
+    var self = this;
 
-    var oauth = {
-      consumer_key: config.fitbit.key,
-      consumer_secret: config.fitbit.secret,
-      token: credentials.token,
-      token_secret: credentials.tokenSecret
-    };
-
-    var url = 'https://api.fitbit.com/1/user/-/activities/tracker/distance/date/' + config.startDate + '/' + config.endDate + '.json';
-
-    request.get({
-      url: url,
-      headers: {
-        'Accept-Language': 'en_US'
-      },
-      oauth: oauth,
-      json: true
-    }, function (err, resp, json) {
+    self.getData('activities/distance', user, function(err, data) {
       if (err) {
-        logger.warn('error getting activities from fitbit api', err);
-        return;
+        throw new Error(err.message || err);
       }
 
-      if (typeof json !== 'object') {
-        logger.info('no data returned for activities from fitbit api');
-        return;
-      }
-
-      if (json.errors) {
-        db.update({
-          encodedId: user.encodedId,
-          authorized: false
-        }).catch(function (err) {
-          logger.warn('error updating user', err);
-        });
-
-        return;
-      }
-
-      var data = json['activities-tracker-distance'],
-          distance = 0;
-
-      if (!data) {
-        logger.info('no activities returned in data from fitbit api');
-        return;
-      }
-
-      for (var i = 0; i < data.length; i ++) {
-        distance += parseFloat(data[i].value);
-      }
+      var distance = _
+        .chain(data['activities-distance'])
+        .map(function(item) {
+          return parseFloat(item.value);
+        })
+        .sum()
+        .value();
 
       db.update({
         encodedId: user.encodedId,

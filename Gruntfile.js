@@ -8,19 +8,19 @@ module.exports = function (grunt) {
 
     concurrent: {
       dev: {
-        tasks: ['watch', 'exec:mongo', 'nodemon:dev'],
+        tasks: ['watch', 'nodemon:dev'],
         options: {
           logConcurrentOutput: true
         }
       },
       notProd: {
-        tasks: ['exec:mongo', 'nodemon:notProd'],
+        tasks: ['nodemon:notProd'],
         options: {
           logConcurrentOutput: true
         }
       },
       prod: {
-        tasks: ['exec:mongo', 'nodemon:prod'],
+        tasks: ['nodemon:prod'],
         options: {
           logConcurrentOutput: true
         }
