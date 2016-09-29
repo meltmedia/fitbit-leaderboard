@@ -35,7 +35,7 @@ module.exports = {
 
     if (!credentials.refreshToken && !credentials.tokenSecret) {
       self.deauthorize(user);
-      throw new Error('User is missing refresh tokens');
+      return null;
     }
 
     // Get a new token if expired
@@ -116,6 +116,10 @@ module.exports = {
   getData: function (path, user, callback) {
     var credentials = this.getCredentials(user);
 
+    if (credentials === null || credentials === undefined || credentials.token === undefined || credentials.token === null) {
+      return callback({message: 'user ' + user.fullName + ' is missing credentials'}, null);
+    }
+
     // See Activity Time Series for details https://dev.fitbit.com/docs/activity/#activity-time-series
     // GET /1/user/[user-id]/[resource-path]/date/[base-date]/[end-date].json
     request.get({
@@ -150,7 +154,8 @@ module.exports = {
 
     self.getData('activities/steps', user, function(err, data) {
       if (err) {
-        throw new Error(err.message || err);
+        logger.warn('Unable to update steps', err);
+        return;
       }
 
       var steps = _
@@ -176,7 +181,8 @@ module.exports = {
 
     self.getData('activities/distance', user, function(err, data) {
       if (err) {
-        throw new Error(err.message || err);
+        logger.warn('Unable to update steps', err);
+        return;
       }
 
       var distance = _
