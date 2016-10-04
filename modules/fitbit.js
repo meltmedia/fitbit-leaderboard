@@ -20,7 +20,7 @@ module.exports = {
     });
   },
 
-  getCredentials: function(user) {
+  getCredentials: function(user, callback) {
     var self = this;
     var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
 
@@ -29,13 +29,14 @@ module.exports = {
 
       // Check if the token is still good
       if (Date.now() / 1000 < decodedToken.exp) {
-        return credentials;
+        return callback(null, credentials);
       }
     }
 
-    if (!credentials.refreshToken && !credentials.tokenSecret) {
+    if (!_.isString(credentials.refreshToken) && !_.isString(credentials.tokenSecret)) {
+      logger.warn('Deauthorizing ' + user.fullName + ', missing refresh: ' + Object.keys(credentials))
       self.deauthorize(user);
-      return null;
+      return callback(null);
     }
 
     // Get a new token if expired
@@ -47,11 +48,17 @@ module.exports = {
       form: {
         'grant_type': 'refresh_token',
         'refresh_token': credentials.refreshToken || credentials.tokenSecret,
-      }
+      },
+      json: true
     }, function(err, response, payload) {
+      logger.warn('refresh post answered')
       if (err) {
         logger.warn('error getting new access token', err);
-        return;
+        return callback(err, null);
+      }
+
+      if (payload.errors.length > 0) {
+        return callback('Error refreshing access token: ' + payload.errors, null);
       }
 
       credentials = {
@@ -67,7 +74,7 @@ module.exports = {
         logger.warn('error updating user credentials', err);
       });
 
-      return credentials;
+      return callback(null, credentials);
     });
   },
 
@@ -114,38 +121,42 @@ module.exports = {
   },
 
   getData: function (path, user, callback) {
-    var credentials = this.getCredentials(user);
-
-    if (credentials === null || credentials === undefined || credentials.token === undefined || credentials.token === null) {
-      return callback({message: 'user ' + user.fullName + ' is missing credentials'}, null);
-    }
-
-    // See Activity Time Series for details https://dev.fitbit.com/docs/activity/#activity-time-series
-    // GET /1/user/[user-id]/[resource-path]/date/[base-date]/[end-date].json
-    request.get({
-      url: 'https://api.fitbit.com/1/user/-/' + path + '/date/' +
-            config.startDate + '/' + config.endDate + '.json',
-      headers: {
-        Authorization: 'Bearer ' + credentials.token
-      },
-      json: true
-    }, function(err, response, data) {
-      if (err) {
-        logger.warn(ERR_BAD_REQUEST, err);
-        return callback({status: response.statusCode, message: ERR_BAD_REQUEST}, null);
+    this.getCredentials(user, function(credentialsError, credentials) {
+      if (credentialsError !== null) {
+        return callback({message: credentialsError}, null);
       }
 
-      if (response.statusCode !== 200) {
-        logger.warn(ERR_INVALID_REQUEST, response.body);
-        return callback({status: response.statusCode, message: ERR_INVALID_REQUEST}, null);
+      if (credentials === null || credentials === undefined || credentials.token === undefined || credentials.token === null) {
+        return callback({message: 'user ' + user.fullName + ' is missing credentials'}, null);
       }
 
-      if (typeof data !== 'object') {
-        logger.warn(ERR_NO_DATA);
-        return callback({status: response.statusCode, message: ERR_NO_DATA}, null);
-      }
+      // See Activity Time Series for details https://dev.fitbit.com/docs/activity/#activity-time-series
+      // GET /1/user/[user-id]/[resource-path]/date/[base-date]/[end-date].json
+      request.get({
+        url: 'https://api.fitbit.com/1/user/-/' + path + '/date/' +
+              config.startDate + '/' + config.endDate + '.json',
+        headers: {
+          Authorization: 'Bearer ' + credentials.token
+        },
+        json: true
+      }, function(err, response, data) {
+        if (err) {
+          logger.warn(ERR_BAD_REQUEST, err);
+          return callback({status: response.statusCode, message: ERR_BAD_REQUEST}, null);
+        }
 
-      return callback(null, data);
+        if (response.statusCode !== 200) {
+          logger.warn(ERR_INVALID_REQUEST, response.body);
+          return callback({status: response.statusCode, message: ERR_INVALID_REQUEST}, null);
+        }
+
+        if (typeof data !== 'object') {
+          logger.warn(ERR_NO_DATA);
+          return callback({status: response.statusCode, message: ERR_NO_DATA}, null);
+        }
+
+        return callback(null, data);
+      });
     });
   },
 
