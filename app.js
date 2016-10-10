@@ -1,7 +1,6 @@
 var express = require('express'),
     session = require('express-session'),
     cookieParser = require('cookie-parser'),
-    krypt = require('krypt'),
     moment = require('moment'),
     uuid = require('uuid-v4'),
     basicAuth = require('basic-auth'),
