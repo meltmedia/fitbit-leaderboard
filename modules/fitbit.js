@@ -11,12 +11,16 @@ var ERR_INVALID_REQUEST = 'Unable to get activities for user';
 var ERR_BAD_REQUEST = 'error making request to fitbit api';
 
 module.exports = {
-  deauthorize: function(user) {
+  deauthorize: function(user, callback) {
     db.update({
       encodedId: user.encodedId,
       authorized: false
+    })
+    .then(function() {
+      return callback(null, true);
     }).catch(function (err) {
       logger.warn('error updating user credentials', err);
+      return callback(err);
     });
   },
 
@@ -34,48 +38,54 @@ module.exports = {
     }
 
     if (!_.isString(credentials.refreshToken) && !_.isString(credentials.tokenSecret)) {
-      logger.warn('Deauthorizing ' + user.fullName + ', missing refresh: ' + Object.keys(credentials))
-      self.deauthorize(user);
-      return callback(null);
-    }
+      logger.debug('Deauthorizing ' + user.fullName + ', missing refresh: ' + Object.keys(credentials));
 
-    // Get a new token if expired
-    request.post({
-      url: 'https://api.fitbit.com/oauth2/token',
-      headers: {
-        Authorization: 'Basic ' + new Buffer(config.fitbit.clientID + ':' + config.fitbit.clientSecret).toString('base64')
-      },
-      form: {
-        'grant_type': 'refresh_token',
-        'refresh_token': credentials.refreshToken || credentials.tokenSecret,
-      },
-      json: true
-    }, function(err, response, payload) {
-      logger.warn('refresh post answered')
-      if (err) {
-        logger.warn('error getting new access token', err);
-        return callback(err, null);
-      }
+      self.deauthorize(user, function(err) {
+        if (err) {
+          return callback(err, null);
+        }
 
-      if (payload.errors.length > 0) {
-        return callback('Error refreshing access token: ' + payload.errors, null);
-      }
-
-      credentials = {
-        token: payload.access_token,
-        refreshToken: payload.refresh_token
-      };
-
-      db.update({
-        encodedId: user.encodedId,
-        authorized: true,
-        credentials: JSON.stringify(krypt.encrypt(JSON.stringify(credentials), config.secret))
-      }).catch(function (err) {
-        logger.warn('error updating user credentials', err);
+        return callback('deauthorized for missing refresh token', null);
       });
+    }
+    else {
+      // Get a new token if expired
+      request.post({
+        url: 'https://api.fitbit.com/oauth2/token',
+        headers: {
+          Authorization: 'Basic ' + new Buffer(config.fitbit.clientID + ':' + config.fitbit.clientSecret).toString('base64')
+        },
+        form: {
+          'grant_type': 'refresh_token',
+          'refresh_token': credentials.refreshToken || credentials.tokenSecret,
+        },
+        json: true
+      }, function(err, response, payload) {
+        if (err) {
+          logger.warn('error getting new access token', err);
+          return callback(err, null);
+        }
 
-      return callback(null, credentials);
-    });
+        if (payload.errors.length > 0) {
+          return callback('Error refreshing access token: ' + payload.errors, null);
+        }
+
+        credentials = {
+          token: payload.access_token,
+          refreshToken: payload.refresh_token
+        };
+
+        db.update({
+          encodedId: user.encodedId,
+          authorized: true,
+          credentials: JSON.stringify(krypt.encrypt(JSON.stringify(credentials), config.secret))
+        }).catch(function (err) {
+          logger.warn('error updating user credentials', err);
+        });
+
+        return callback(null, credentials);
+      });
+    }
   },
 
   addUser: function(secret, profile) {
