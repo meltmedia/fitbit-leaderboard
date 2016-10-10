@@ -66,7 +66,7 @@ module.exports = {
           return callback(err, null);
         }
 
-        if (payload.errors.length > 0) {
+        if (payload.errors && payload.errors.length > 0) {
           return callback('Error refreshing access token: ' + payload.errors, null);
         }
 
