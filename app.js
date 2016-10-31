@@ -46,14 +46,12 @@ passport.use(new FitbitStrategy({
   },
   function (accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      if (!moment().isAfter(config.endDate)) {
-        var secret = {
-          token: accessToken,
-          refreshToken: refreshToken
-        };
+      var secret = {
+        token: accessToken,
+        refreshToken: refreshToken
+      };
 
-        fitbit.addUser(secret, profile);
-      }
+      fitbit.addUser(secret, profile);
 
       return done(null, profile);
     });

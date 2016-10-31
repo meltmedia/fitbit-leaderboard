@@ -67,7 +67,9 @@ module.exports = {
         }
 
         if (payload.errors && payload.errors.length > 0) {
-          return callback('Error refreshing access token: ' + payload.errors, null);
+          self.deauthorize(user, function() {
+            return callback('Error refreshing access token for "'+ user.fullName +'": ' + payload.errors[0].message, null);
+          })
         }
 
         credentials = {
