@@ -1559,9 +1559,9 @@
       }
     },
     "ejs": {
-      "version": "1.0.0",
-      "from": "https://registry.npmjs.org/ejs/-/ejs-1.0.0.tgz",
-      "resolved": "https://registry.npmjs.org/ejs/-/ejs-1.0.0.tgz"
+      "version": "2.5.5",
+      "from": "https://registry.npmjs.org/ejs/-/ejs-2.5.5.tgz",
+      "resolved": "https://registry.npmjs.org/ejs/-/ejs-2.5.5.tgz"
     },
     "express": {
       "version": "4.9.4",

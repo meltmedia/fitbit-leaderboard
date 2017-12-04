@@ -101,7 +101,8 @@ module.exports = {
       authorized: true,
       avatar: userProfile.avatar,
       encodedId: userProfile.encodedId,
-      fullName: userProfile.fullName
+      fullName: userProfile.fullName,
+      lastUpdated: new Date()
     };
 
     db.find(userObj.encodedId).then(function (user) {
@@ -192,7 +193,8 @@ module.exports = {
       db.update({
         encodedId: user.encodedId,
         steps: steps,
-        authorized: true
+        authorized: true,
+        lastUpdated: new Date()
       }).catch(function (err) {
         logger.warn('error updating user', err);
       });
@@ -219,7 +221,8 @@ module.exports = {
       db.update({
         encodedId: user.encodedId,
         distance: distance,
-        authorized: true
+        authorized: true,
+        lastUpdated: new Date()
       }).catch(function (err) {
         logger.warn('error updating user', err);
       });
