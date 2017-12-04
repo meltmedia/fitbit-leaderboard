@@ -190,6 +190,11 @@ h2 {
 }
 
 #badge1 {
+  @media (max-width: 408px) {
+    img {
+      width: 100%;
+    }
+  }
   @media (max-width: 767px) {
     text-align: center;
     margin-bottom: 25px;
