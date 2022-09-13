@@ -29,7 +29,13 @@ module.exports = {
     var credentials = JSON.parse(krypt.decrypt(JSON.parse(user.credentials), config.secret));
 
     if (credentials.token !== undefined && credentials.token !== null) {
-      var decodedToken = JWT.decode(credentials.token, null, true);
+      var decodedToken;
+      try {
+        decodedToken = JWT.decode(credentials.token, null, true);
+      } catch(err) {
+        logger.warn('error decoding token', err);
+        return callback(err);
+      }
 
       // Check if the token is still good
       if (Date.now() / 1000 < decodedToken.exp) {
@@ -153,6 +159,8 @@ module.exports = {
         },
         json: true
       }, function(err, response, data) {
+        response = response || {}
+        
         if (err) {
           logger.warn(ERR_BAD_REQUEST, err);
           return callback({status: response.statusCode, message: ERR_BAD_REQUEST}, null);
